@@ -19,22 +19,25 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String email;  // User's email (unique)
 
     @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    private String passwordHash;  // Store password hash
 
     @Column(name = "first_name")
-    private String firstName;
+    private String firstName;  // User's first name
 
     @Column(name = "last_name")
-    private String lastName;
+    private String lastName;  // User's last name
+
+    @Column(name = "profile_picture")
+    private String profilePicture;  // Store profile picture URL or file path
 
     @Column(name = "created_at", updatable = false)
-    private OffsetDateTime createdAt;
+    private OffsetDateTime createdAt;  // Record creation time
 
     @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
+    private OffsetDateTime updatedAt;  // Record last update time
 
     @PrePersist
     void onCreate() {

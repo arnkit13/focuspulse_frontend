@@ -1,0 +1,124 @@
+/* Profile Page Content Styling */
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dash-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+}
+
+.signout-btn {
+  padding: 7px 16px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-h);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dash-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 40px;
+  text-align: center;
+  padding: 40px 24px;
+  background-color: var(--card-bg); /* Soft background for the profile section */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+}
+
+.profile-info {
+  font-size: 1.3rem;
+  color: var(--text-h);
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.profile-form,
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* Limiting form width */
+  margin-top: 20px;
+}
+
+.profile-form input,
+.password-form input {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.profile-form input:focus,
+.password-form input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.profile-form button,
+.password-form button {
+  padding: 12px 25px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.profile-form button:hover,
+.password-form button:hover {
+  background-color: darkgreen;
+}
+
+.profile-form img {
+  margin-top: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-form img:hover {
+  transform: scale(1.1);
+}
+
+/* Hover effects for inputs and buttons */
+.profile-form input:hover,
+.password-form input:hover {
+  border-color: var(--highlight);
+}
+
+.profile-form button:active,
+.password-form button:active {
+  background-color: darkgreen;
+}
