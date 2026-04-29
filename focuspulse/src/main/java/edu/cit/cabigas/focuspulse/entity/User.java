@@ -39,6 +39,9 @@ public class User {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;  // Record last update time
 
+    @Column(name = "role")
+    private String role = "USER";  // User role (USER or ADMIN)
+
     @PrePersist
     void onCreate() {
         createdAt = updatedAt = OffsetDateTime.now();

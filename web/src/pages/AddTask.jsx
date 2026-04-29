@@ -1,35 +1,39 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api.js';
+import { toast } from '../lib/toast.js';
 import './AddTask.css';
 
 export default function AddTask() {
   const navigate = useNavigate();
 
-  // Initialize tasks from localStorage
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
+  const [tasks, setTasks] = useState([]);
   const [taskName, setTaskName] = useState('');
   const [pomodoroDuration, setPomodoroDuration] = useState(1); // Default to 1 minute
   const [editing, setEditing] = useState(false);
-  const [currentTaskIndex, setCurrentTaskIndex] = useState(null);
+  const [currentTaskId, setCurrentTaskId] = useState(null);
 
-  // Sync tasks to localStorage whenever the tasks state changes
+  // Fetch tasks on mount
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    const fetchTasks = async () => {
+      try {
+        const data = await api.getTasks();
+        setTasks(data);
+      } catch (err) {
+        console.error('Error fetching tasks:', err);
+      }
+    };
+    fetchTasks();
+  }, []);
 
   // Session check to ensure the user is still logged in
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     
-    // We only run this logic if we're not already on the login page or dashboard
     if (!token || !user) {
       if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
-        navigate('/login'); // Navigate to login if no token or user found in localStorage
+        navigate('/login');
       }
     }
   }, [navigate]);
@@ -39,34 +43,34 @@ export default function AddTask() {
   };
 
   // Handle saving or updating a task
-  const handleSaveTask = (e) => {
-    // Prevent form refresh (and page reload)
+  const handleSaveTask = async (e) => {
     if (e) e.preventDefault();
-
     if (taskName.trim() === '') return; // Prevent saving empty tasks
 
-    const newTask = { 
-      id: Date.now(), 
+    const taskData = { 
       name: taskName, 
       pomodoroDuration: parseFloat(pomodoroDuration) 
     };
 
-    let updatedTasks;
-    if (editing) {
-      updatedTasks = tasks.map((task, index) =>
-        index === currentTaskIndex ? { ...task, name: taskName, pomodoroDuration: parseFloat(pomodoroDuration) } : task
-      );
-    } else {
-      updatedTasks = [...tasks, newTask];
+    try {
+      if (editing) {
+        const updated = await api.updateTask(currentTaskId, taskData);
+        setTasks(tasks.map((task) => (task.id === currentTaskId ? updated : task)));
+      } else {
+        const created = await api.createTask(taskData);
+        setTasks([...tasks, created]);
+      }
+
+      // Reset form fields after saving task
+      setTaskName('');
+      setPomodoroDuration(1);
+      setEditing(false);
+      setCurrentTaskId(null);
+      toast('Task saved successfully', 'success');
+    } catch (err) {
+      console.error('Error saving task:', err);
+      toast('Error saving task: ' + err.message, 'error');
     }
-
-    setTasks(updatedTasks);
-
-    // Reset form fields after saving task
-    setTaskName('');
-    setPomodoroDuration(0.9);
-    setEditing(false);
-    setCurrentTaskIndex(null);
   };
 
   const handleCancel = (e) => {
@@ -74,28 +78,29 @@ export default function AddTask() {
     navigate('/dashboard'); // Navigate to the dashboard on cancel
   };
 
-  const handleDeleteTask = (e) => {
-  if (e) e.preventDefault();
+  const handleDeleteTask = async (e) => {
+    if (e) e.preventDefault();
+    if (!currentTaskId) return;
 
-  // Filter out the task at currentTaskIndex
-  const updatedTasks = tasks.filter((_, index) => index !== currentTaskIndex);
-  setTasks(updatedTasks);
-
-  // Reset editing state and current task index
-  setEditing(false);
-  setCurrentTaskIndex(null);
-
-  // Navigate to the dashboard after deletion
-   // This should happen after the state update to reflect the changes
-};
+    try {
+      await api.deleteTask(currentTaskId);
+      setTasks(tasks.filter((task) => task.id !== currentTaskId));
+      
+      setEditing(false);
+      setCurrentTaskId(null);
+      toast('Task deleted successfully', 'success');
+    } catch (err) {
+      console.error('Error deleting task:', err);
+      toast('Error deleting task: ' + err.message, 'error');
+    }
+  };
 
   // Function to handle task click (edit mode)
-  const handleTaskClick = (index) => {
-    const task = tasks[index];
+  const handleTaskClick = (task) => {
     setTaskName(task.name);
     setPomodoroDuration(task.pomodoroDuration);
     setEditing(true);
-    setCurrentTaskIndex(index);
+    setCurrentTaskId(task.id);
   };
 
   return (
@@ -155,11 +160,11 @@ export default function AddTask() {
 <div className="task-list">
   <h3>Your Tasks</h3>
   <ul>
-    {tasks.map((task, index) => (
+    {tasks.map((task) => (
       <li key={task.id}>
         <span 
           style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
-          onClick={() => handleTaskClick(index)}
+          onClick={() => handleTaskClick(task)}
         >
           {task.name} - {task.pomodoroDuration} minutes {/* Corrected here */}
         </span>

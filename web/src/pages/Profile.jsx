@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api.js';
+import { toast } from '../lib/toast.js';
 import './Profile.css'; // Importing CSS
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
   const [loading, setLoading] = useState(true); // Loading state for better UX
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios
-        .get('/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      api.getProfile()
         .then((response) => {
-          setUser(response.data);
-          setEmail(response.data.email); // Initialize with current email
+          setFirstName(response.firstName || '');
+          setLastName(response.lastName || '');
+          setProfilePicturePreview(response.profilePicture || null);
           setLoading(false);
         })
         .catch((err) => {
@@ -38,63 +36,43 @@ export default function Profile() {
     return <div>Loading...</div>;
   }
 
-  // Handle profile update
+  // Handle profile update (email, profile picture)
   const handleProfileUpdate = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form submission
 
     const formData = new FormData();
-    formData.append('email', email); // Add the email to FormData
-
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
     if (profilePicture) {
-      formData.append('profilePicture', profilePicture); // Add profile picture to FormData
+      formData.append('profilePicture', profilePicture);
     }
 
     try {
-      const token = localStorage.getItem('token'); // Get JWT token from localStorage
-
       // Send PUT request to backend with the FormData
-      await axios.put('/profile', formData, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data', // Ensure Content-Type is set for file uploads
-        }
-      });
+      await api.updateProfile(formData);
 
-      alert('Profile updated successfully!');
+      // After successful profile update, refetch the updated profile
+      const response = await api.getProfile();
+      setFirstName(response.firstName || '');
+      setLastName(response.lastName || '');
+      
+      // Update local storage so the dashboard gets the latest profile picture
+      localStorage.setItem('user', JSON.stringify(response));
+
+      toast('Profile updated successfully!', 'success');
     } catch (err) {
-      console.error("Error updating profile:", err); // Log error for debugging
-      alert('Error updating profile');
+      console.error("Error updating profile:", err);
+      toast(err.message || 'Error updating profile', 'error');
     }
   };
 
-  // Handle password change
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    try {
-      await axios.put('/profile/password', { oldPassword, newPassword }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert('Password updated successfully!');
-    } catch (err) {
-      console.error('Error changing password:', err); // Log error for debugging
-      alert('Error changing password');
-    }
-  };
 
-  // Handle sign out
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
 
   return (
     <div className="profile-page">
       <header className="dash-header">
         <span className="dash-logo">FocusPulse</span>
         <div>
-          
           <button className="signout-btn" onClick={() => navigate('/dashboard')}>Back</button>
         </div>
       </header>
@@ -104,51 +82,47 @@ export default function Profile() {
 
         {/* Profile Update Form */}
         <form onSubmit={handleProfileUpdate} className="profile-form">
-          <div>
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled
-            />
-            {/* Disable email input since it's already set to the current email */}
-          </div>
-
-          <div>
-            <label>Profile Picture</label>
+          <div className="profile-pic-section">
+            <label>Change Profile Picture</label>
+            <div className="profile-pic-preview">
+              {profilePicturePreview ? (
+                <img src={profilePicturePreview} alt="Profile preview" className="profile-form-img" />
+              ) : (
+                <div className="profile-pic-placeholder-large">👤</div>
+              )}
+            </div>
             <input
               type="file"
-              onChange={(e) => setProfilePicture(e.target.files[0])}
-            />
-            {profilePicture && <img src={URL.createObjectURL(profilePicture)} alt="Profile" />}
-          </div>
-
-          <button type="submit">Update Profile</button>
-        </form>
-
-        {/* Change Password Form */}
-        <h3>Change Password</h3>
-        <form onSubmit={handlePasswordChange} className="password-form">
-          <div>
-            <label>Old Password</label>
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setProfilePicture(file);
+                  setProfilePicturePreview(URL.createObjectURL(file));
+                }
+              }}
             />
           </div>
-
-          <div>
-            <label>New Password</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
+          <div className="name-group">
+            <div className="input-field">
+              <label>First Name</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label>Last Name</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
           </div>
-
-          <button type="submit">Change Password</button>
+          
+          <button type="submit" className="save-profile-btn">Update Profile</button>
         </form>
       </main>
     </div>

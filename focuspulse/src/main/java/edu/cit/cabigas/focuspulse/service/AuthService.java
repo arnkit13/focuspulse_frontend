@@ -29,10 +29,23 @@ public class AuthService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        
+        if ("ADMIN".equalsIgnoreCase(request.getRole())) {
+            if (!request.getEmail().endsWith("@admin.com")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Admin email must end with @admin.com");
+            }
+            if (!"yonah".equals(request.getAdminCode())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid admin code");
+            }
+            user.setRole("ADMIN");
+        } else {
+            user.setRole("USER");
+        }
+        
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole());
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -44,6 +57,6 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole());
     }
 }

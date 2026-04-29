@@ -1,9 +1,9 @@
 package edu.cit.cabigas.focuspulse.service;
 
 import edu.cit.cabigas.focuspulse.dto.PasswordDTO;
+import edu.cit.cabigas.focuspulse.dto.UserDTO;
 import edu.cit.cabigas.focuspulse.entity.User;
 import edu.cit.cabigas.focuspulse.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,13 +12,26 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Password encoder for hashing
+    private final JwtService jwtService;
 
-    // Update user profile (email and profile picture)
-    public void updateUserProfile(String token, String email, MultipartFile profilePicture) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    public UserDTO getUserProfile(String token) {
+        String userEmail = extractEmailFromToken(token);
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
+        return new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getProfilePicture(), user.getRole());
+    }
+
+    // Update user profile (email, profile picture, first name, last name)
+    public void updateUserProfile(String token, String email, MultipartFile profilePicture, String firstName, String lastName) {
         String userEmail = extractEmailFromToken(token); // Get current user's email from token
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -31,6 +44,14 @@ public class UserService {
         if (profilePicture != null) {
             String profilePictureUrl = saveProfilePicture(profilePicture);  // Save file and get URL or path
             user.setProfilePicture(profilePictureUrl);  // Set the new profile picture URL
+        }
+
+        // Update first name and last name
+        if (firstName != null && !firstName.trim().isEmpty()) {
+            user.setFirstName(firstName);
+        }
+        if (lastName != null && !lastName.trim().isEmpty()) {
+            user.setLastName(lastName);
         }
 
         userRepository.save(user);  // Save the updated user in the database
@@ -50,12 +71,23 @@ public class UserService {
         }
     }
 
-    // Save profile picture to file system or cloud storage (e.g., AWS S3, Local Storage)
+    // Save profile picture to file system
     private String saveProfilePicture(MultipartFile file) {
         try {
-            // Implement your logic to save the image and return the URL or file path
-            String filePath = "path/to/saved/image.jpg";  // Example file path (you should save the file to a directory or cloud storage)
-            return filePath;
+            // Create uploads directory if it doesn't exist
+            String uploadDir = "uploads/";
+            java.io.File dir = new java.io.File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            // Save the file
+            String fileName = "profile_" + System.currentTimeMillis() + "_" + file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
+            java.nio.file.Path path = java.nio.file.Paths.get(uploadDir + fileName);
+            java.nio.file.Files.copy(file.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            
+            // Return the full URL to access the image
+            return "http://localhost:8081/uploads/" + fileName;
         } catch (Exception e) {
             throw new RuntimeException("Error saving profile picture: " + e.getMessage());
         }
@@ -63,7 +95,10 @@ public class UserService {
 
     // Extract user email from JWT token
     private String extractEmailFromToken(String token) {
-        // This should decode the JWT and extract the email, for now it's a placeholder
-        return "user@example.com"; // Replace with actual JWT decoding logic
+        // Remove "Bearer " prefix if present
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return jwtService.extractEmail(token);
     }
 }

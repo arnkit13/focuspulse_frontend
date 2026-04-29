@@ -15,34 +15,46 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
-    // PUT: Update user profile (email and profile picture)
-    @PutMapping
-    public ResponseEntity<String> updateProfile(
-            @RequestHeader("Authorization") String token,  
-            @RequestParam("email") String email,  
-            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture  
+    // GET: Fetch user profile data
+    @GetMapping
+    public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
+        try {
+            return ResponseEntity.ok(userService.getUserProfile(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching profile: " + e.getMessage());
+        }
+    }
+
+    // POST: Update user profile (email and profile picture) - POST is required for multipart/form-data
+    @PostMapping
+    public ResponseEntity<?> updateProfile(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture
     ) {
         try {
-            // Call the service to update the profile (email and profile picture)
-            userService.updateUserProfile(token, email, profilePicture);
-            return ResponseEntity.ok("Profile updated successfully");
+            // Call the service to update the profile
+            userService.updateUserProfile(token, email, profilePicture, firstName, lastName);
+            return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Profile updated successfully"));
         } catch (Exception e) {
             // Return an error response with the error message from the backend
-            return ResponseEntity.status(500).body("Error updating profile: " + e.getMessage());
+            return ResponseEntity.status(500).body(java.util.Collections.singletonMap("message", "Error updating profile: " + e.getMessage()));
         }
     }
 
     // PUT: Update password
     @PutMapping("/password")
-    public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token,
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token,
                                                  @Valid @RequestBody PasswordDTO passwordDTO) {
         try {
             // Call the service to change the password
             userService.changePassword(token, passwordDTO);
-            return ResponseEntity.ok("Password updated successfully");
+            return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Password updated successfully"));
         } catch (Exception e) {
             // Return an error response if password change fails
-            return ResponseEntity.status(500).body("Error changing password: " + e.getMessage());
+            return ResponseEntity.status(500).body(java.util.Collections.singletonMap("message", "Error changing password: " + e.getMessage()));
         }
     }
 }
