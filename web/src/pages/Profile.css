@@ -10,14 +10,16 @@
 
 .dash-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   padding: 18px 32px;
   border-bottom: 1px solid var(--border);
+  gap: 12px;
 }
 
 .dash-logo {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: -0.3px;
@@ -27,10 +29,16 @@
   padding: 7px 16px;
   border: 1px solid var(--border);
   border-radius: 7px;
-  background: transparent;
+  background-color: var(--bg-btn);
   color: var(--text-h);
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.signout-btn:hover {
+  background-color: var(--accent-bg);
+  border-color: var(--accent-border);
 }
 
 .dash-main {
@@ -73,7 +81,9 @@
   border-radius: 8px;
   width: 100%;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  background-color: var(--bg-btn);
+  color: var(--text-h);
 }
 
 .profile-form input:focus,
@@ -96,13 +106,13 @@
 
 .profile-form button:hover,
 .password-form button:hover {
-  background-color: darkgreen;
+  background-color: rgba(120, 55, 190, 0.95);
 }
 
 .profile-form img {
   margin-top: 20px;
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   transition: transform 0.3s ease;
@@ -121,4 +131,62 @@
 .profile-form button:active,
 .password-form button:active {
   background-color: darkgreen;
+}
+
+.name-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-field label {
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.profile-pic-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.profile-pic-section label {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.profile-pic-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-pic-placeholder-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: var(--border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.save-profile-btn {
+  margin-top: 10px;
+  width: 100%;
 }

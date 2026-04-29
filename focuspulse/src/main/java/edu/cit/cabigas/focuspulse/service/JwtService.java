@@ -1,6 +1,7 @@
 package edu.cit.cabigas.focuspulse.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -22,21 +23,29 @@ public class JwtService {
 
     public String generateToken(String email, Long userId) {
         return Jwts.builder()
-                .subject(email)
+                .setSubject(email)
                 .claim("userId", userId)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(signingKey())
                 .compact();
     }
 
     public String extractEmail(String token) {
-        return getClaims(token).getSubject();
+        String cleanToken = normalizeToken(token);
+        if (cleanToken == null || cleanToken.isBlank()) {
+            throw new IllegalArgumentException("JWT token is missing or empty");
+        }
+        return getClaims(cleanToken).getSubject();
     }
 
     public boolean isValid(String token) {
         try {
-            getClaims(token);
+            String cleanToken = normalizeToken(token);
+            if (cleanToken == null || cleanToken.isBlank()) {
+                return false;
+            }
+            getClaims(cleanToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -44,11 +53,19 @@ public class JwtService {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(signingKey())
+        SecretKey key = signingKey();
+        Jws<Claims> jws = Jwts.parser()
+                .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseSignedClaims(token);
+        return jws.getPayload();
+    }
+
+    private String normalizeToken(String token) {
+        if (token == null) {
+            return null;
+        }
+        return token.replaceFirst("^Bearer ", "").trim();
     }
 
     private SecretKey signingKey() {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
+import { toast } from '../lib/toast'
 import './Auth.css'
 
 export default function Register() {
@@ -11,22 +12,24 @@ export default function Register() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [role, setRole] = useState('USER')
+  const [adminCode, setAdminCode] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    
+    if (role === 'ADMIN' && !email.endsWith('@admin.com')) {
+      setError('Administrator emails must end with "@admin.com"')
+      return
+    }
+
     setLoading(true)
 
     try {
-      const data = await api.register({ firstName, lastName, email, password })
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify({
-        id: data.userId,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-      }))
-      navigate('/dashboard')
+      await api.register({ firstName, lastName, email, password, role, adminCode })
+      toast('Account created! Please sign in.', 'success')
+      navigate('/login')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -93,6 +96,46 @@ export default function Register() {
               autoComplete="new-password"
             />
           </div>
+
+          <div className="field">
+            <label>Account Type</label>
+            <div className="role-selector" style={{ display: 'flex', gap: '15px', marginTop: '5px', marginBottom: '15px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <input 
+                  type="radio" 
+                  name="role" 
+                  value="USER" 
+                  checked={role === 'USER'} 
+                  onChange={() => setRole('USER')} 
+                /> 
+                Standard User
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <input 
+                  type="radio" 
+                  name="role" 
+                  value="ADMIN" 
+                  checked={role === 'ADMIN'} 
+                  onChange={() => setRole('ADMIN')} 
+                /> 
+                Administrator
+              </label>
+            </div>
+          </div>
+
+          {role === 'ADMIN' && (
+            <div className="field">
+              <label htmlFor="adminCode">Admin Registration Code</label>
+              <input
+                id="adminCode"
+                type="password"
+                value={adminCode}
+                onChange={(e) => setAdminCode(e.target.value)}
+                placeholder="Enter secret code"
+                required={role === 'ADMIN'}
+              />
+            </div>
+          )}
 
           {error && <p className="auth-error">{error}</p>}
 

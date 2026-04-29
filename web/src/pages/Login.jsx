@@ -18,13 +18,15 @@ export default function Login() {
     try {
       const data = await api.login({ email, password })
       localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify({
-        id: data.userId,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-      }))
-      navigate('/dashboard')
+      
+      // Fetch the complete profile to get the profile picture and other details
+      const profileData = await api.getProfile()
+      localStorage.setItem('user', JSON.stringify(profileData))
+      if (profileData.role === 'ADMIN' || data.role === 'ADMIN') {
+        navigate('/admin-dashboard')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (err) {
       setError(err.message)
     } finally {
