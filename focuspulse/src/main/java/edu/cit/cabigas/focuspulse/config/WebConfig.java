@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Allow all paths
-                .allowedOrigins("http://localhost:3000") // Allow requests from frontend (React app)
+                .allowedOriginPatterns("http://localhost:*", "https://*.vercel.app") // Allow requests from local frontend and Vercel
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specific HTTP methods
                 .allowCredentials(true); // Allow credentials (cookies, authorization headers)
     }
