@@ -1,115 +1,123 @@
-/* Overall Layout */
+/* Add Task Modal / Page */
 .dashboard {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  padding: 30px;  /* Increased padding */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
 }
 
-.dash-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 36px;  /* Increased padding */
-  border-bottom: 1px solid var(--border);
-}
-
-.dash-logo {
-  font-size: 28px;  /* Increased font size */
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.3px;
-}
-
-.signout-btn {
-  padding: 10px 20px;  /* Increased padding */
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  background: transparent;
-  color: var(--text-h);
-  font-size: 16px;  /* Increased font size */
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.signout-btn:hover {
-  background: var(--accent-bg);
-  border-color: var(--accent-border);
-  color: var(--accent);
-}
-
-/* Task Form */
 .task-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;  /* Increased gap */
+  gap: 30px;
   text-align: center;
-  padding: 35px 25px;  /* Increased padding */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);  /* Increased shadow */
-  border-radius: 12px;  /* Slightly larger border-radius */
-  background-color: var(--bg);
+  padding: 40px;
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  margin: 60px auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.task-form h2 {
+  font-family: var(--heading);
+  font-size: 2rem;
+  color: var(--text-h);
+  margin: 0;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .task-form input {
-  padding: 12px;  /* Increased padding */
-  font-size: 1.1rem;  /* Increased font size */
-  width: 100%;
-  border-radius: 5px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  font-size: 1rem;
+  font-family: var(--sans);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-h);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.task-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+  box-shadow: 0 0 0 4px var(--accent-bg);
+  transform: translateY(-1px);
 }
 
 .pomodoro-duration {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.pomodoro-duration span {
+  font-weight: 600;
+  color: var(--text-h);
+  font-size: 1.05rem;
 }
 
 .pomodoro-duration input {
-  padding: 12px;  /* Increased padding */
-  width: 90px;  /* Increased width */
-  border-radius: 5px;
-  border: 1px solid var(--border);
+  width: 100px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .modal-buttons {
   display: flex;
-  gap: 25px;  /* Increased gap */
+  gap: 20px;
   justify-content: center;
+  margin-top: 10px;
 }
 
 .modal-buttons button {
-  padding: 12px 25px;  /* Increased padding */
-  font-size: 1.4rem;  /* Increased font size */
-  background-color: var(--accent);
+  padding: 16px 32px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+}
+
+.modal-buttons button:first-child {
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   color: white;
   border: none;
-  border-radius: 7px;  /* Slightly larger border-radius */
-  cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: 0 8px 20px -6px var(--accent-border);
 }
 
-.modal-buttons button:hover {
-  background-color: darkgreen;
+.modal-buttons button:first-child:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px -8px var(--accent-border);
+  background: linear-gradient(135deg, var(--accent-hover), #6366f1);
 }
 
-/* Task List */
-.task-list {
-  margin-top: 25px;  /* Increased margin-top */
+.modal-buttons button:last-child {
+  background: transparent;
+  color: var(--text-h);
+  border: 1px solid var(--border);
 }
 
-.task-list ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.task-list li {
-  font-size: 1.4rem;  /* Increased font size */
-  margin-bottom: 15px;  /* Increased margin-bottom */
-  cursor: pointer;
-}
-
-.task-list li span {
-  text-decoration: none;
+.modal-buttons button:last-child:hover {
+  background: var(--bg-btn);
+  border-color: var(--text);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }

@@ -100,9 +100,14 @@ export default function Settings() {
     <div className="settings-page">
       <header className="dash-header">
         <span className="dash-logo">FocusPulse</span>
-        <div>
-          <button className="signout-btn" onClick={() => navigate('/dashboard')}>Back</button>
-        </div>
+          <button className="signout-btn" onClick={() => {
+            const userStr = localStorage.getItem('user');
+            if (userStr && JSON.parse(userStr).role === 'ADMIN') {
+              navigate('/admin-dashboard');
+            } else {
+              navigate('/dashboard');
+            }
+          }}>Back</button>
       </header>
 
       <main className="settings-main">

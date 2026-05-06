@@ -28,7 +28,12 @@ public class TaskService {
             token = token.substring(7);
         }
         String email = jwtService.extractEmail(token);
-        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        user.setLastActiveAt(java.time.OffsetDateTime.now());
+        userRepository.save(user);
+        
+        return user;
     }
 
     @Transactional

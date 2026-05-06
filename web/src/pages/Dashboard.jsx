@@ -47,6 +47,9 @@ export default function Dashboard() {
     }
   }, [navigate, user]);
 
+  const [completedSessions, setCompletedSessions] = useState(0);
+  const dailyGoal = 4; // 4 Pomodoro sessions
+
   useEffect(() => {
     let interval;
     if (isActive) {
@@ -56,6 +59,9 @@ export default function Dashboard() {
             clearInterval(interval);
             setIsActive(false);
             alarmSoundRef.current.play().catch((err) => console.log("Error playing sound:", err)); // Play alarm sound and handle errors
+            if (sessionType === 'pomodoro') {
+              setCompletedSessions(c => c + 1);
+            }
             return prev;
           }
           return prev - 1;
@@ -66,7 +72,7 @@ export default function Dashboard() {
     }
 
     return () => clearInterval(interval);
-  }, [isActive, timer]);
+  }, [isActive, timer, sessionType]);
 
   function handleStart() {
     setIsActive(true);
@@ -148,11 +154,19 @@ export default function Dashboard() {
       if (currentTask && currentTask.id === taskId) {
         setCurrentTask(null);
       }
+      setCompletedSessions(c => c + 1);
       toast('Task marked as completed!', 'success');
     } catch (err) {
       console.error('Error completing task:', err);
       toast('Error completing task: ' + err.message, 'error');
     }
+  };
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
   };
 
   if (!user) return null;
@@ -194,7 +208,23 @@ export default function Dashboard() {
       </header>
 
       <main className="dash-main">
-        <h2>Welcome, {user.firstName ? `${user.firstName} ${user.lastName}` : user.email}</h2>
+        <h2 className="greeting">{getGreeting()}, {user.firstName ? user.firstName : user.email.split('@')[0]}!</h2>
+
+        <div className="daily-goal-widget">
+          <div className="goal-header">
+            <span>Daily Focus Goal</span>
+            <span>{Math.min(completedSessions, dailyGoal)} / {dailyGoal}</span>
+          </div>
+          <div className="goal-progress-bar">
+            <div 
+              className="goal-progress-fill" 
+              style={{ width: `${Math.min((completedSessions / dailyGoal) * 100, 100)}%` }}
+            ></div>
+          </div>
+          {completedSessions >= dailyGoal && (
+            <p className="goal-achieved-text">🎉 You've reached your daily goal!</p>
+          )}
+        </div>
 
         <div className="session-buttons">
           <button
@@ -217,7 +247,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div className="timer-display">
+        <div className={`timer-display ${isActive ? 'active' : ''}`}>
           <p>{formatTime(timer)}</p>
         </div>
 

@@ -27,6 +27,10 @@ public class UserService {
     public UserDTO getUserProfile(String token) {
         String userEmail = extractEmailFromToken(token);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        user.setLastActiveAt(java.time.OffsetDateTime.now());
+        userRepository.save(user);
+        
         return new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getProfilePicture(), user.getRole());
     }
 

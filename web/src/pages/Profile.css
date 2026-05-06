@@ -3,190 +3,200 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  padding: 30px 20px;
-  box-sizing: border-box;
 }
 
 .dash-header {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 32px;
+  padding: 20px 40px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .dash-logo {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.3px;
+  font-size: 26px;
+  font-family: var(--heading);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
 }
 
 .signout-btn {
-  padding: 7px 16px;
+  padding: 10px 20px;
   border: 1px solid var(--border);
-  border-radius: 7px;
-  background-color: var(--bg-btn);
+  border-radius: 12px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
   color: var(--text-h);
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .signout-btn:hover {
-  background-color: var(--accent-bg);
-  border-color: var(--accent-border);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 .dash-main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   flex: 1;
-  gap: 40px;
-  text-align: center;
-  padding: 40px 24px;
-  background-color: var(--card-bg); /* Soft background for the profile section */
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+  padding: 60px 24px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .profile-info {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-family: var(--heading);
   color: var(--text-h);
-  font-weight: 600;
-  margin-bottom: 20px;
-  text-align: left;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .profile-form,
 .password-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   align-items: center;
   width: 100%;
-  max-width: 500px; /* Limiting form width */
-  margin-top: 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 40px;
 }
 
 .profile-form input,
 .password-form input {
-  padding: 12px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   width: 100%;
   font-size: 1rem;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-  background-color: var(--bg-btn);
+  font-family: var(--sans);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-h);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .profile-form input:focus,
 .password-form input:focus {
-  border-color: var(--accent);
   outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+  box-shadow: 0 0 0 4px var(--accent-bg);
+  transform: translateY(-1px);
 }
 
 .profile-form button,
 .password-form button {
-  padding: 12px 25px;
-  background-color: var(--accent);
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 8px 20px -6px var(--accent-border);
 }
 
 .profile-form button:hover,
 .password-form button:hover {
-  background-color: rgba(120, 55, 190, 0.95);
-}
-
-.profile-form img {
-  margin-top: 20px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.profile-form img:hover {
-  transform: scale(1.1);
-}
-
-/* Hover effects for inputs and buttons */
-.profile-form input:hover,
-.password-form input:hover {
-  border-color: var(--highlight);
-}
-
-.profile-form button:active,
-.password-form button:active {
-  background-color: darkgreen;
-}
-
-.name-group {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-
-.input-field {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-}
-
-.input-field label {
-  font-weight: 500;
-  color: var(--text-h);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px -8px var(--accent-border);
+  background: linear-gradient(135deg, var(--accent-hover), #6366f1);
 }
 
 .profile-pic-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 30px;
   width: 100%;
 }
 
 .profile-pic-section label {
   font-weight: 600;
   color: var(--text-h);
+  font-size: 1.1rem;
 }
 
-.profile-pic-preview {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.profile-pic-preview img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--bg);
+  box-shadow: var(--shadow-md), 0 0 0 2px var(--accent);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.profile-pic-preview img:hover {
+  transform: scale(1.05) rotate(2deg);
 }
 
 .profile-pic-placeholder-large {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  background-color: var(--border);
+  background: linear-gradient(135deg, var(--accent), #d946ef);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  color: var(--text);
-  font-weight: 500;
+  font-size: 3rem;
+  color: white;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
 }
 
-.save-profile-btn {
-  margin-top: 10px;
+.name-group {
+  display: flex;
+  gap: 20px;
   width: 100%;
+}
+
+@media (max-width: 600px) {
+  .name-group {
+    flex-direction: column;
+  }
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.input-field label {
+  font-weight: 600;
+  color: var(--text-h);
+  padding-left: 4px;
 }

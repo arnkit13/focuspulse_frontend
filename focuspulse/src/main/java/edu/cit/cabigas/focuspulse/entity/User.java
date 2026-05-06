@@ -42,6 +42,9 @@ public class User {
     @Column(name = "role")
     private String role = "USER";  // User role (USER or ADMIN)
 
+    @Column(name = "last_active_at")
+    private OffsetDateTime lastActiveAt;  // Record last active time
+
     @PrePersist
     void onCreate() {
         createdAt = updatedAt = OffsetDateTime.now();
