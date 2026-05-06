@@ -39,15 +39,6 @@ export default function Userlist() {
     }
   };
 
-  const handleAction = (userEmail, userStatus, actionType) => {
-    if (userStatus === 'Admin') {
-      toast("You cannot modify another admin account.", "error");
-      return;
-    }
-    // Mock action since we don't have ban backend setup yet
-    toast(`Successfully applied '${actionType}' to ${userEmail}`, "success");
-  };
-
   const filteredUsers = users.filter(u => 
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -83,7 +74,7 @@ export default function Userlist() {
                   <th>Email</th>
                   <th>Role / Status</th>
                   <th>Joined</th>
-                  <th>Actions</th>
+                  <th>Last Active</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,20 +91,15 @@ export default function Userlist() {
                       </td>
                       <td>{user.email}</td>
                       <td>
-                        <span className={`status-badge ${user.status === 'Admin' ? 'admin' : 'active'}`}>
+                        <span className={`status-badge ${user.status.toLowerCase()}`}>
                           {user.status}
                         </span>
                       </td>
                       <td className="date-col">
                         {user.joinedAt ? new Date(user.joinedAt).toLocaleDateString() : 'Unknown'}
                       </td>
-                      <td>
-                        {user.status !== 'Admin' && (
-                          <div className="action-buttons">
-                            <button className="btn-warn" onClick={() => handleAction(user.email, user.status, 'Warn')}>Warn</button>
-                            <button className="btn-danger" onClick={() => handleAction(user.email, user.status, 'Ban')}>Ban</button>
-                          </div>
-                        )}
+                      <td className="date-col">
+                        {user.lastActiveAt ? new Date(user.lastActiveAt).toLocaleString() : 'Never'}
                       </td>
                     </tr>
                   ))

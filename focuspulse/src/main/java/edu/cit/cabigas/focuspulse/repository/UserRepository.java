@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     // Additional method to find user by first name or last name (optional)
     Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
+
+    // Count active sessions based on last active time
+    long countByLastActiveAtAfter(java.time.OffsetDateTime time);
 }

@@ -1,10 +1,8 @@
+/* Settings Page Layout */
 .settings-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  padding: 30px 20px;
-  box-sizing: border-box;
 }
 
 .settings-main {
@@ -12,12 +10,7 @@
   flex-direction: column;
   align-items: center;
   flex: 1;
-  gap: 40px;
-  text-align: center;
-  padding: 40px 24px;
-  background-color: var(--card-bg);
-  border-radius: 10px;
-  box-shadow: var(--shadow);
+  padding: 60px 24px;
   max-width: 600px;
   margin: 0 auto;
   width: 100%;
@@ -28,20 +21,26 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid var(--border);
-}
-
-.settings-section:last-child {
-  border-bottom: none;
+  gap: 24px;
+  padding: 30px;
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 24px;
 }
 
 .settings-section h3 {
   margin: 0;
   color: var(--text-h);
   font-size: 1.5rem;
-  font-weight: 600;
+  font-family: var(--heading);
+  font-weight: 700;
+  border-bottom: 2px solid var(--accent-bg);
+  padding-bottom: 12px;
+  width: 100%;
 }
 
 .settings-form {
@@ -61,41 +60,50 @@
 }
 
 .settings-form label {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-h);
+  padding-left: 4px;
 }
 
 .settings-form input {
-  padding: 12px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   width: 100%;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
-  background: transparent;
+  font-family: var(--sans);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-h);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .settings-form input:focus {
-  border-color: var(--accent);
   outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+  box-shadow: 0 0 0 4px var(--accent-bg);
+  transform: translateY(-1px);
 }
 
 .settings-btn {
-  padding: 12px 25px;
-  background-color: var(--accent);
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: opacity 0.3s ease;
-  align-self: flex-start;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 8px 20px -6px var(--accent-border);
 }
 
 .settings-btn:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px -8px var(--accent-border);
+  background: linear-gradient(135deg, var(--accent-hover), #6366f1);
 }
 
 .toggle-group {
@@ -103,19 +111,21 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: 12px 0;
 }
 
 .toggle-group span {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-h);
+  font-size: 1.05rem;
 }
 
 /* Toggle Switch CSS */
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 28px;
+  width: 54px;
+  height: 30px;
 }
 
 .switch input {
@@ -131,32 +141,35 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(148, 163, 184, 0.18);
-  transition: .4s;
+  background-color: rgba(148, 163, 184, 0.2);
+  transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 34px;
   border: 1px solid var(--border);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 20px;
-  width: 20px;
+  height: 22px;
+  width: 22px;
   left: 4px;
-  bottom: 4px;
+  bottom: 3px;
   background-color: white;
-  transition: .4s;
+  transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 input:checked + .slider {
-  background-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #d946ef);
+  border-color: transparent;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-bg);
 }
 
 input:checked + .slider:before {
-  transform: translateX(22px);
+  transform: translateX(24px);
 }

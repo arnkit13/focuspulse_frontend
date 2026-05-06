@@ -129,10 +129,16 @@
   border: 1px solid rgba(224, 102, 255, 0.3);
 }
 
-.status-badge.active {
+.status-badge.online {
   background: rgba(46, 204, 113, 0.1);
   color: #2ecc71;
   border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.status-badge.offline {
+  background: rgba(149, 165, 166, 0.1);
+  color: #95a5a6;
+  border: 1px solid rgba(149, 165, 166, 0.3);
 }
 
 .date-col {

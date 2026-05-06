@@ -42,6 +42,7 @@ public class AuthService {
             user.setRole("USER");
         }
         
+        user.setLastActiveAt(java.time.OffsetDateTime.now());
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());
@@ -55,6 +56,9 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
+
+        user.setLastActiveAt(java.time.OffsetDateTime.now());
+        userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());
         return new AuthResponse(token, user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole());
