@@ -90,8 +90,8 @@ public class UserService {
             java.nio.file.Path path = java.nio.file.Paths.get(uploadDir + fileName);
             java.nio.file.Files.copy(file.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             
-            // Return the full URL to access the image
-            return "http://localhost:8081/uploads/" + fileName;
+            // Return the full URL to access the image dynamically based on the current server
+            return org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath().path("/uploads/" + fileName).toUriString();
         } catch (Exception e) {
             throw new RuntimeException("Error saving profile picture: " + e.getMessage());
         }
