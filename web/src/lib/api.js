@@ -1,4 +1,6 @@
-const BASE = import.meta.env.VITE_API_URL;
+// We explicitly hardcode the Render URL so Vercel never uses localhost!
+// If your Render URL is different, change the URL below:
+const BASE = "https://focuspulse-backend.onrender.com";
 
 async function request(path, options = {}) {
   const token = localStorage.getItem('token')
