@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api.js';
-import { toast } from '../lib/toast.js';
+import { api } from '../../lib/api.js';
+import { toast } from '../../lib/toast.js';
 import './Profile.css'; // Importing CSS
 
 export default function Profile() {

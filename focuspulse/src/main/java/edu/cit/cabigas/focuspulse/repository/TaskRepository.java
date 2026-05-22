@@ -1,10 +1,10 @@
 package edu.cit.cabigas.focuspulse.repository;
 
-import edu.cit.cabigas.focuspulse.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.cit.cabigas.focuspulse.entity.User;
+import edu.cit.cabigas.focuspulse.model.Task;
 import java.util.List;
 
 @Repository

@@ -1,15 +1,14 @@
 package edu.cit.cabigas.focuspulse.service;
 
-import edu.cit.cabigas.focuspulse.model.Task;
 import edu.cit.cabigas.focuspulse.entity.User;
-import edu.cit.cabigas.focuspulse.repository.TaskRepository;
 import edu.cit.cabigas.focuspulse.repository.UserRepository;
+import edu.cit.cabigas.focuspulse.repository.TaskRepository;
+import edu.cit.cabigas.focuspulse.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api.js';
-import { toast } from '../lib/toast.js';
+import { api } from '../../lib/api.js';
+import { toast } from '../../lib/toast.js';
 import './Settings.css';
 
 export default function Settings() {
@@ -167,7 +167,7 @@ export default function Settings() {
                 type="checkbox" 
                 checked={notificationsEnabled} 
                 onChange={toggleNotifications} 
-              />
+                />
               <span className="slider"></span>
             </label>
           </div>
@@ -179,7 +179,7 @@ export default function Settings() {
                 type="checkbox" 
                 checked={darkMode} 
                 onChange={toggleDarkMode} 
-              />
+                />
               <span className="slider"></span>
             </label>
           </div>

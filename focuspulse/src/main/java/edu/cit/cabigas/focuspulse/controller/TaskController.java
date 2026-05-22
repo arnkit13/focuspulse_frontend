@@ -1,13 +1,12 @@
 package edu.cit.cabigas.focuspulse.controller;
 
-import edu.cit.cabigas.focuspulse.model.Task;  // Correct import for Task model
-import edu.cit.cabigas.focuspulse.service.TaskService;  // Correct import for TaskService
+import edu.cit.cabigas.focuspulse.model.Task;
+import edu.cit.cabigas.focuspulse.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")

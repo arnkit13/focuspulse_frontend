@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final JwtService jwtService;
-
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, JwtService jwtService) {

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api.js';
-import { toast } from '../lib/toast.js';
+import { api } from '../../lib/api.js';
+import { toast } from '../../lib/toast.js';
 import './Dashboard.css';
 
 export default function Dashboard() {
